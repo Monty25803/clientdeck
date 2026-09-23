@@ -25,8 +25,8 @@ export function AppShell({
   const agency = isAgency(user.role);
 
   return (
-    <div className="agency-shell min-h-screen md:grid md:grid-cols-[240px_1fr]">
-      <aside className="flex flex-col justify-between bg-ink px-5 py-6 text-paper">
+    <div className="agency-shell min-h-dvh md:h-dvh md:grid md:grid-cols-[240px_minmax(0,1fr)] md:overflow-hidden">
+      <aside className="flex flex-col justify-between bg-ink px-5 py-6 text-paper md:h-dvh md:overflow-hidden">
         <div>
           <Link href="/dashboard" className="flex items-center gap-3">
             {org.logoUrl ? (
@@ -76,8 +76,8 @@ export function AppShell({
           <p className="px-1 text-[11px] text-paper/40">ClientDeck · AGPLv3. Source is this instance.</p>
         </div>
       </aside>
-      <div className="min-w-0">
-        <header className="flex items-center justify-between border-b border-rule px-6 py-4">
+      <div className="flex min-w-0 min-h-0 flex-col md:h-dvh">
+        <header className="flex shrink-0 items-center justify-between border-b border-rule bg-paper/90 px-6 py-4 backdrop-blur">
           <SearchBox />
           <div className="flex items-center gap-3">
             <NotificationBell />
@@ -87,7 +87,7 @@ export function AppShell({
             <SignOutButton />
           </div>
         </header>
-        <main className="px-6 py-8">{children}</main>
+        <main className="min-h-0 flex-1 overflow-y-auto px-6 py-8">{children}</main>
       </div>
     </div>
   );
