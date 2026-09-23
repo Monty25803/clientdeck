@@ -1,0 +1,23 @@
+-- AlterEnum
+ALTER TYPE "MilestoneStatus" ADD VALUE 'CHANGES_REQUESTED';
+
+-- AlterEnum
+ALTER TYPE "ActivityType" ADD VALUE 'COMMENT_RESOLVED';
+ALTER TYPE "ActivityType" ADD VALUE 'CHANGES_REQUESTED';
+ALTER TYPE "ActivityType" ADD VALUE 'MILESTONE_REOPENED';
+ALTER TYPE "ActivityType" ADD VALUE 'NEXT_ROUND_CREATED';
+ALTER TYPE "ActivityType" ADD VALUE 'PROJECT_ARCHIVED';
+
+-- AlterTable
+ALTER TABLE "Project" ADD COLUMN "archivedAt" TIMESTAMP(3);
+
+-- AlterTable
+ALTER TABLE "Milestone" ADD COLUMN "dueAt" TIMESTAMP(3);
+ALTER TABLE "Milestone" ADD COLUMN "changeNote" TEXT;
+
+-- AlterTable
+ALTER TABLE "Annotation" ADD COLUMN "resolvedAt" TIMESTAMP(3);
+ALTER TABLE "Annotation" ADD COLUMN "resolvedById" TEXT;
+
+-- AlterTable
+ALTER TABLE "Comment" ADD COLUMN "editedAt" TIMESTAMP(3);

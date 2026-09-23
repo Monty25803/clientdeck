@@ -1,0 +1,221 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  PROJECT_MANAGER
+  CLIENT
+}
+
+enum MilestoneStatus {
+  DRAFT
+  IN_REVIEW
+  CHANGES_REQUESTED
+  APPROVED
+}
+
+enum ActivityType {
+  PROJECT_CREATED
+  MEMBER_INVITED
+  ASSET_UPLOADED
+  VERSION_UPLOADED
+  COMMENT_ADDED
+  COMMENT_RESOLVED
+  REVIEW_REQUESTED
+  CHANGES_REQUESTED
+  MILESTONE_APPROVED
+  MILESTONE_REOPENED
+  NEXT_ROUND_CREATED
+  PROJECT_ARCHIVED
+}
+
+model Organization {
+  id           String    @id @default(cuid())
+  name         String
+  logoKey      String?
+  primaryColor String    @default("#1c1915")
+  accentColor  String    @default("#c45c26")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  users        User[]
+  projects     Project[]
+  invites      Invite[]
+}
+
+model User {
+  id             String          @id @default(cuid())
+  email          String          @unique
+  passwordHash   String
+  name           String
+  role           Role            @default(CLIENT)
+  organizationId String
+  organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  lastSeenAt     DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  memberships    ProjectMember[]
+  comments       Comment[]
+  annotations    Annotation[]
+  approvals      Approval[]
+  activities     Activity[]
+  invitesSent    Invite[]
+  uploadedVersions AssetVersion[]
+  passwordResets PasswordReset[]
+}
+
+model PasswordReset {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+}
+
+model Invite {
+  id             String       @id @default(cuid())
+  email          String
+  token          String       @unique
+  role           Role
+  projectId      String?
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  invitedById    String
+  invitedBy      User         @relation(fields: [invitedById], references: [id])
+  expiresAt      DateTime
+  acceptedAt     DateTime?
+  revokedAt      DateTime?
+  createdAt      DateTime     @default(now())
+
+  @@index([email])
+}
+
+model Project {
+  id             String          @id @default(cuid())
+  name           String
+  clientName     String
+  description    String?
+  archivedAt     DateTime?
+  organizationId String
+  organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  members        ProjectMember[]
+  milestones     Milestone[]
+  activities     Activity[]
+}
+
+model ProjectMember {
+  id        String   @id @default(cuid())
+  projectId String
+  userId    String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([projectId, userId])
+}
+
+model Milestone {
+  id          String          @id @default(cuid())
+  projectId   String
+  name        String
+  description String?
+  status      MilestoneStatus @default(DRAFT)
+  dueAt       DateTime?
+  changeNote  String?
+  project     Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  assets      Asset[]
+  approvals   Approval[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}
+
+model Asset {
+  id          String         @id @default(cuid())
+  milestoneId String
+  name        String
+  milestone   Milestone      @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+  versions    AssetVersion[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model AssetVersion {
+  id            String       @id @default(cuid())
+  assetId       String
+  versionNumber Int
+  storageKey    String
+  mimeType      String
+  sizeBytes     Int
+  width         Int?
+  height        Int?
+  uploadedById  String
+  uploadedBy    User         @relation(fields: [uploadedById], references: [id])
+  asset         Asset        @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  annotations   Annotation[]
+  createdAt     DateTime     @default(now())
+
+  @@unique([assetId, versionNumber])
+}
+
+model Annotation {
+  id           String       @id @default(cuid())
+  versionId    String
+  authorId     String
+  x            Float
+  y            Float
+  resolvedAt   DateTime?
+  resolvedById String?
+  version      AssetVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  author       User         @relation(fields: [authorId], references: [id])
+  comments     Comment[]
+  createdAt    DateTime     @default(now())
+}
+
+model Comment {
+  id           String     @id @default(cuid())
+  annotationId String
+  authorId     String
+  body         String
+  editedAt     DateTime?
+  annotation   Annotation @relation(fields: [annotationId], references: [id], onDelete: Cascade)
+  author       User       @relation(fields: [authorId], references: [id])
+  createdAt    DateTime   @default(now())
+}
+
+model Approval {
+  id              String    @id @default(cuid())
+  milestoneId     String
+  userId          String
+  signerName      String
+  signatureKey    String?
+  agreementText   String
+  agreementHash   String
+  versionSnapshot Json
+  ipAddress       String?
+  userAgent       String?
+  milestone       Milestone @relation(fields: [milestoneId], references: [id])
+  user            User      @relation(fields: [userId], references: [id])
+  createdAt       DateTime  @default(now())
+}
+
+model Activity {
+  id        String       @id @default(cuid())
+  projectId String
+  actorId   String
+  type      ActivityType
+  payload   Json
+  project   Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  actor     User         @relation(fields: [actorId], references: [id])
+  createdAt DateTime     @default(now())
+
+  @@index([projectId, createdAt])
+}

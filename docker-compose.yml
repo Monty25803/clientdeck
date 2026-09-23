@@ -1,0 +1,58 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: clientdeck
+      POSTGRES_PASSWORD: clientdeck
+      POSTGRES_DB: clientdeck
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U clientdeck -d clientdeck"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  minio:
+    image: quay.io/minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: clientdeck
+      MINIO_ROOT_PASSWORD: clientdecksecret
+      MINIO_API_CORS_ALLOW_ORIGIN: "*"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - miniodata:/data
+
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      APP_URL: http://localhost:3000
+      AUTH_URL: http://localhost:3000
+      AUTH_SECRET: ${AUTH_SECRET:-clientdeck-dev-secret-change-in-production-please}
+      AUTH_TRUST_HOST: "true"
+      DATABASE_URL: postgresql://clientdeck:clientdeck@db:5432/clientdeck
+      S3_ENDPOINT: http://minio:9000
+      S3_PUBLIC_ENDPOINT: http://localhost:9000
+      S3_REGION: us-east-1
+      S3_BUCKET: clientdeck
+      S3_ACCESS_KEY: clientdeck
+      S3_SECRET_KEY: clientdecksecret
+      S3_FORCE_PATH_STYLE: "true"
+    depends_on:
+      db:
+        condition: service_healthy
+      minio:
+        condition: service_started
+    profiles:
+      - full
+
+volumes:
+  pgdata:
+  miniodata:

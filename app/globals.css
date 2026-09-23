@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink: #1c1915;
+  --paper: #f4efe4;
+  --paper-2: #ebe3d3;
+  --rule: #d7ccb8;
+  --muted-fg: #6d6559;
+  --brand-primary: #1c1915;
+  --brand-accent: #c45c26;
+  --ok: #2f6b4f;
+  --warn: #b45309;
+  --danger: #9b2c2c;
+}
+
+html,
+body {
+  min-height: 100%;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+body {
+  font-feature-settings: "kern" 1;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--brand-accent) 28%, white);
+}
+
+.surface-grid {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(to bottom, rgba(244, 239, 228, 0.72), rgba(244, 239, 228, 0.88)),
+    url("/brand/clientdeck-hero.png"),
+    linear-gradient(to right, rgba(28, 25, 21, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(28, 25, 21, 0.04) 1px, transparent 1px);
+  background-size: auto, cover, 32px 32px, 32px 32px;
+  background-position: center, center, 0 0, 0 0;
+}
+
+.agency-shell {
+  background:
+    radial-gradient(1200px 500px at 10% -10%, rgba(196, 92, 38, 0.08), transparent 50%),
+    var(--paper);
+}
+
+@media print {
+  aside,
+  header,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  body {
+    background: white;
+  }
+}
