@@ -3,6 +3,7 @@ import { CircleHelp, FolderKanban, Settings2 } from "lucide-react";
 import { NotificationBell } from "@/components/notification-bell";
 import { SearchBox } from "@/components/search-box";
 import { SignOutButton } from "@/components/sign-out-button";
+import { BrandMark } from "@/components/brand-mark";
 import { initials } from "@/lib/utils";
 import type { SessionUser } from "@/lib/rbac";
 import { isAgency } from "@/lib/rbac";
@@ -28,12 +29,12 @@ export function AppShell({
       <aside className="flex flex-col justify-between bg-ink px-5 py-6 text-paper">
         <div>
           <Link href="/dashboard" className="flex items-center gap-3">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={org.logoUrl || "/brand/clientdeck-logo.png"}
-              alt=""
-              className="h-9 w-9 rounded-lg object-cover"
-            />
+            {org.logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={org.logoUrl} alt="" className="h-10 w-10 rounded-xl object-cover" />
+            ) : (
+              <BrandMark inverted className="[&>svg]:h-10 [&>svg]:w-10" />
+            )}
             <div>
               <p className="font-serif text-xl leading-none">{org.name}</p>
               <p className="mt-1 text-[11px] uppercase tracking-[0.18em] text-paper/55">ClientDeck</p>

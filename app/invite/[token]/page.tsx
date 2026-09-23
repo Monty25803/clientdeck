@@ -13,7 +13,8 @@ export default async function InvitePage({ params }: { params: Promise<{ token: 
     return (
       <main className="flex min-h-screen items-center justify-center px-6">
         <div className="max-w-md rounded-3xl border border-rule bg-white/80 p-8">
-          <h1 className="font-serif text-3xl">Invite unavailable</h1>
+          <BrandMark showWordmark />
+          <h1 className="mt-5 font-serif text-3xl">Invite unavailable</h1>
           <p className="mt-3 text-sm text-muted">This link is invalid, already used, or expired.</p>
         </div>
       </main>

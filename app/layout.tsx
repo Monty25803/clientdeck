@@ -21,8 +21,8 @@ export const metadata: Metadata = {
   title: "ClientDeck",
   description: "Self-hosted client portal for asset delivery and formal approval.",
   icons: {
-    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }, { url: "/brand/clientdeck-logo.png" }],
-    apple: "/brand/clientdeck-logo.png",
+    icon: [{ url: "/brand/logo.svg", type: "image/svg+xml" }, { url: "/favicon.svg", type: "image/svg+xml" }],
+    apple: "/brand/logo.svg",
   },
 };
 

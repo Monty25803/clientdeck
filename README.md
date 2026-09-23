@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  <img alt="Release" src="https://img.shields.io/badge/release-v0.2.0-1c1915" />
+  <img alt="Release" src="https://img.shields.io/badge/release-v0.2.1-1c1915" />
   <img alt="License" src="https://img.shields.io/badge/license-AGPLv3-c45c26" />
   <img alt="Stack" src="https://img.shields.io/badge/stack-Next.js%2015%20·%20Postgres%20·%20MinIO-6d6559" />
 </p>
@@ -114,13 +114,14 @@ ClientDeck is meant to feel like a studio desk, not a SaaS dashboard.
 | Accent | `#c45c26` | Actions, pins, waiting states |
 | Studio override | Org `primaryColor` / `accentColor` | Live CSS variables (`--ink`, `--brand-accent`) |
 
-Type: **Source Serif 4** for titles, **Source Sans 3** for UI. The default mark is a stacked-card **C** (`public/brand/clientdeck-logo.png`) on the editorial hero (`public/brand/clientdeck-hero.png`). Auth screens use that hero as the background. A studio can replace the sidebar mark from **Studio settings**.
+Type: **Source Serif 4** for titles, **Source Sans 3** for UI. The in-app mark is an inline SVG **C** on a folded card (`public/brand/logo.svg`) so it stays sharp at 40px. The editorial hero (`public/brand/clientdeck-hero.png`) sits behind a paper wash on auth screens. A studio can replace the sidebar mark from **Studio settings**.
 
 Source files:
 
-- Logo: [docs/brand/clientdeck-logo.png](docs/brand/clientdeck-logo.png)
+- App mark: [public/brand/logo.svg](public/brand/logo.svg)
+- Marketing logo: [docs/brand/clientdeck-logo.png](docs/brand/clientdeck-logo.png)
 - Hero: [docs/brand/clientdeck-hero.png](docs/brand/clientdeck-hero.png)
-- Favicon: [public/favicon.svg](public/favicon.svg)
+- Favicon: [public/favicon.svg](public/favicon.svg) / [app/icon.svg](app/icon.svg)
 
 ---
 
@@ -267,4 +268,4 @@ This is a **formal project sign-off and audit trail**. It is not a certified ele
 
 ## Release
 
-Current tag: **v0.2.0** — review workflow (request changes, resolve threads, email pings, next round), brand mark, and this handbook.
+Current tag: **v0.2.1** — crisp SVG mark on login and every shell page (the padded PNG was invisible at 40px). v0.2.0 added the review workflow, brand, and handbook.

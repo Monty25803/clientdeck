@@ -3,20 +3,24 @@ import { cn } from "@/lib/utils";
 export function BrandMark({
   className,
   showWordmark = false,
+  inverted = false,
 }: {
   className?: string;
   showWordmark?: boolean;
+  inverted?: boolean;
 }) {
   return (
     <span className={cn("inline-flex items-center gap-3", className)}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/brand/clientdeck-logo.png"
-        alt=""
-        className="h-10 w-10 rounded-xl object-cover shadow-sm"
-      />
+      <svg viewBox="0 0 64 64" className="h-10 w-10 shrink-0" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill={inverted ? "#f4efe4" : "#1c1915"} />
+        <path d="M42 10h6a6 6 0 0 1 6 6v6L42 10Z" fill="#c45c26" />
+        <path
+          d="M36.4 24.6c0-3.8-2.9-6.2-7.6-6.2H21v21.2h7.8c4.9 0 8-2.6 8-6.7 0-2.8-1.5-4.6-3.9-5.4 2-.8 3.1-2.6 3.1-5zM26 21.6h2.8c2.3 0 3.6 1.1 3.6 3s-1.3 3-3.6 3H26v-6zm3.2 16.2H26v-6.8h2.9c2.5 0 3.9 1.3 3.9 3.4 0 2.1-1.4 3.4-3.6 3.4z"
+          fill={inverted ? "#1c1915" : "#f4efe4"}
+        />
+      </svg>
       {showWordmark && (
-        <span className="font-serif text-2xl leading-none tracking-tight">ClientDeck</span>
+        <span className="font-serif text-2xl leading-none tracking-tight text-ink">ClientDeck</span>
       )}
     </span>
   );
